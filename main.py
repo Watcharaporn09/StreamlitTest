@@ -7,10 +7,12 @@ from pathlib import Path
 
 st.sidebar.header('Input Features')
 
+hosp = st.sidebar.selectbox("hospital", ("a","b","c"))
+
 def input_features():
-    age = st.sidebar.number_input("Age (yrs)", value = 0)
+    age = st.sidebar.number_input("Age (yrs)", value=0)
     hema = st.sidebar.radio("Hematemesis",["Yes","No"])
-    hb = st.sidebar.number_input("Hemoglobin level (g/dL)", value = 0.00)
+    hb = st.sidebar.number_input("Hemoglobin level (g/dL)", value=0.00)
 
     data = {'Age': age,
             'Hematemesis': hema,
@@ -39,7 +41,7 @@ if st.sidebar.button('Predict'):
     else:
         st.write('Ready for Prediction')
 
-        outdf = pd.DataFrame([{'Timestamp': dt.datetime.now()}])
+        outdf = pd.DataFrame([{'Timestamp': dt.datetime.now(), 'Hospital': hosp}])
         outdf = pd.concat([outdf, df], axis=1)
 
         # Assume the predicted value and the probabilities for all classes
@@ -56,12 +58,13 @@ if st.sidebar.button('Predict'):
             st.write('File Not Found!')
             outdf.to_csv('out.csv', index=False)
 
-        collecteddf = pd.read_csv('out.csv')
 
-        st.download_button(
-            label="Download CSV",
-            data=collecteddf.to_csv().encode("utf-8"),
-            file_name="collecteddata.csv",
-            mime="text/csv"
-        )
+if myfile.is_file():
+    collecteddf = pd.read_csv('out.csv')
 
+    st.download_button(
+        label="Download CSV",
+        data=collecteddf.to_csv().encode("utf-8"),
+        file_name="collecteddata.csv",
+        mime="text/csv"
+    )
